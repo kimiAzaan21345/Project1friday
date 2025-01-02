@@ -1,0 +1,65 @@
+<html lang="en">
+  <%- include('./partials/head') %>
+  <body>
+    <%- include('./partials/navbar') %> <%- include('./partials/flash') %>
+    <div class="container mt-5">
+      <h2>Search Saved Coins</h2>
+      <form action="/search" method="POST">
+        <div class="mb-3">
+          <label for="query" class="form-label">Search</label>
+          <input
+            type="text"
+            class="form-control"
+            id="query"
+            name="coin_name"
+            value="<%= query %>"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+
+      <% if (results.length > 0) { %>
+      <ul class="list-group mt-3">
+        <% results.forEach(function(coin) { %>
+        <li class="list-group-item">
+          <div>
+            <strong>Name:</strong> <%= coin.name %> (<%= coin.symbol %>)<br />
+            <strong>Price:</strong> <%= coin.current_price %> USD<br />
+            <strong>Market Cap:</strong> <%= coin.market_cap %> USD<br />
+            <strong>Market Cap Rank:</strong> <%= coin.market_cap_rank %><br />
+            <strong>Fully Diluted Valuation:</strong> <%=
+            coin.fully_diluted_valuation %> USD<br />
+            <strong>Total Volume:</strong> <%= coin.total_volume %> USD<br />
+            <strong>24h High:</strong> <%= coin.high_24h %> USD<br />
+            <strong>24h Low:</strong> <%= coin.low_24h %> USD<br />
+            <strong>24h Price Change:</strong> <%= coin.price_change_24h %>
+            USD<br />
+            <strong>24h Price Change Percentage:</strong> <%=
+            coin.price_change_percentage_24h %> %<br />
+            <strong>Market Cap Change (24h):</strong> <%=
+            coin.market_cap_change_24h %> USD<br />
+            <strong>Market Cap Change Percentage (24h):</strong> <%=
+            coin.market_cap_change_percentage_24h %> %<br />
+            <strong>Circulating Supply:</strong> <%= coin.circulating_supply
+            %><br />
+            <strong>Total Supply:</strong> <%= coin.total_supply %><br />
+            <strong>Max Supply:</strong> <%= coin.max_supply %><br />
+            <strong>All Time High (ATH):</strong> <%= coin.ath %> USD<br />
+            <strong>ATH Change Percentage:</strong> <%=
+            coin.ath_change_percentage %> %<br />
+            <strong>ATH Date:</strong> <%= coin.ath_date %><br />
+            <strong>All Time Low (ATL):</strong> <%= coin.atl %> USD<br />
+            <strong>ATL Change Percentage:</strong> <%=
+            coin.atl_change_percentage %> %<br />
+            <strong>ATL Date:</strong> <%= coin.atl_date %><br />
+            <strong>Last Updated:</strong> <%= coin.last_updated %><br />
+          </div>
+        </li>
+        <% }) %>
+      </ul>
+      <% } else if (query) { %>
+      <p>No results found for "<%= query %>".</p>
+      <% } %>
+    </div>
+  </body>
+</html>
