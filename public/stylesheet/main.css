@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap');
+
+:root {
+  --primary: #00ffd5;
+  --accent: #ff00c8;
+  --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  --glass: rgba(255, 255, 255, 0.05);
+  --glow: 0 0 10px var(--primary);
+}
+
+body {
+  margin: 0;
+  padding-top: 70px;
+  background: var(--bg-gradient);
+  color: #e0e0e0;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+h1, h2, h3, h4 {
+  color: #ffffff;
+  text-shadow: 0 0 8px var(--primary);
+}
+
+.container, .coin-detail-block {
+  background-color: var(--glass);
+  border-radius: 16px;
+  padding: 30px;
+  margin: 40px auto;
+  max-width: 1000px;
+  box-shadow: 0 0 20px rgba(0, 255, 234, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+canvas {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 0 20px rgba(106, 0, 255, 0.3);
+}
+
+.navbar {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+}
+
+.navbar-brand {
+  color: #00ffd5 !important;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.navbar-nav .nav-link {
+  color: #ddd !important;
+  transition: 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--primary) !important;
+  text-shadow: 0 0 6px var(--primary);
+}
+
+.btn-save {
+  background-color: var(--glass);
+  color: #00ffd5;
+  border: 1px solid #00ffd5;
+  box-shadow: 0 0 8px #00ffd5;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.btn-save:hover {
+  background-color: #00ffd5;
+  color: #121212;
+  box-shadow: 0 0 15px #00ffd5;
+  transform: scale(1.05);
+}
+
+
+input, select, textarea {
+  background-color: #1c1c2e !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 5px var(--primary);
+}
+
+.alert {
+  border-radius: 8px;
+  font-weight: bold;
+}
+.text-glow {
+  color: #ffffff;
+  text-shadow:
+    0 0 10px var(--primary),
+    0 0 20px var(--primary),
+    0 0 30px var(--accent);
+}
+/* Glowing Text */
+.text-glow {
+  color: #ffffff;
+  text-shadow:
+    0 0 10px var(--primary),
+    0 0 20px var(--primary),
+    0 0 30px var(--accent);
+}
+
+/* Hover Glow on Crypto Icons */
+.crypto-row img {
+  width: 60px;
+  transition: 0.3s ease;
+  border-radius: 12px;
+}
+
+.crypto-row img:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px var(--primary));
+}
+
+/* CTA Button Style */
+.btn-glow {
+  background: linear-gradient(to right, #00ffd5, #ff00c8);
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 12px var(--primary);
+  border: none;
+  transition: 0.3s ease;
+}
+
+.btn-glow:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--accent);
+}
+
+/* Scroll Down Arrow */
+.scroll-down span {
+  font-size: 2rem;
+  color: var(--primary);
+  animation: bounce 1.5s infinite;
+}
+
+/* Bounce animation for arrow */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+/* Optional: Animated background pulse */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--primary), transparent 70%);
+  animation: pulse 10s infinite;
+  opacity: 0.05;
+  z-index: 0;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); opacity: 0.08; }
+  100% { transform: scale(1); }
+}
+

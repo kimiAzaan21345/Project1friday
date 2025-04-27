@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head') %>
+  <head>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background: linear-gradient(135deg, #1a002b, #290a3d);
+        color: #e0e0e0;
+        font-family: 'Rajdhani', sans-serif;
+        padding-top: 60px;
+      }
+
+      h2, h4 {
+        color: #e6e6ff;
+        text-shadow: 0 0 8px #6a00ff;
+      }
+
+      p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+      }
+
+      .coin-detail-block {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        padding: 30px;
+        margin: 40px auto;
+        max-width: 1000px;
+        box-shadow: 0 0 20px rgba(0, 255, 234, 0.15);
+        backdrop-filter: blur(10px);
+      }
+
+      .coin-description {
+        color: #d8d8ff;
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 30px;
+      }
+
+      canvas {
+        background-color: rgba(255, 255, 255, 0.02);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 0 20px rgba(106, 0, 255, 0.3);
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('./partials/navbar') %>
+    <%- include('./partials/flash') %>
+
+    <div class="coin-detail-block text-light">
+      <h2 class="text-center">
+        <%= details.name %> (<%= details.symbol.toUpperCase() %>)
+      </h2>
+
+      <p class="text-center">
+        Market Cap: £<%= details.market_data.market_cap.gbp.toLocaleString() %> |
+        Current Price: £<%= details.market_data.current_price.gbp.toLocaleString() %>
+      </p>
+
+      <div class="coin-description">
+        <h5>About <%= details.name %></h5>
+        <p>
+          <%= details.description.en
+            ? details.description.en.split('. ').slice(0, 2).join('. ') + '.'
+            : 'No description available.' %>
+        </p>
+      </div>
+
+      <hr />
+      <h4 class="text-center mb-4">30-Day Overview</h4>
+
+      <div class="chart-container">
+        <canvas id="priceChart" width="800" height="400"></canvas>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const chartData = JSON.parse('<%- JSON.stringify(chart) %>');
+
+      const labels = chartData.prices.map(p => new Date(p[0]).toLocaleDateString());
+      const prices = chartData.prices.map(p => p[1]);
+      const volumes = chartData.total_volumes.map(v => v[1]);
+      const marketCaps = chartData.market_caps.map(m => m[1]);
+
+      const ctx = document.getElementById('priceChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Price (GBP)',
+              data: prices,
+              borderColor: '#00ffd5',
+              backgroundColor: 'rgba(0, 255, 213, 0.1)',
+              tension: 0.4,
+              fill: true,
+              pointRadius: 1
+            },
+            {
+              label: 'Market Cap (GBP)',
+              data: marketCaps,
+              borderColor: '#ff00c8',
+              backgroundColor: 'rgba(255, 0, 200, 0.1)',
+              tension: 0.4,
+              fill: true,
+              pointRadius: 1
+            },
+            {
+              label: 'Total Volume (GBP)',
+              data: volumes,
+              borderColor: '#007bff',
+              backgroundColor: 'rgba(0, 123, 255, 0.1)',
+              tension: 0.4,
+              fill: true,
+              pointRadius: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#fff',
+                font: { size: 14 }
+              }
+            },
+            tooltip: {
+              backgroundColor: '#222',
+              titleColor: '#0ff',
+              bodyColor: '#fff',
+              borderColor: '#0ff',
+              borderWidth: 1
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              ticks: { color: '#ddd' },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              title: {
+                display: true,
+                text: 'GBP',
+                color: '#aaa'
+              }
+            },
+            x: {
+              ticks: { color: '#ddd' },
+              grid: { color: 'rgba(255,255,255,0.05)' }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+

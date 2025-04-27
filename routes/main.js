@@ -1,15 +1,17 @@
 const express = require("express");
+const router = express.Router();
 const passport = require("passport");
 const { check, validationResult } = require("express-validator");
+
 const { registerAcc } = require("../auth/register");
 const getCoinsList = require("../request/getCoinList");
 const saveCoinToUser = require("../request/saveCoinToUser");
 const getSavedCoins = require("../request/getSavedCoins");
 const deleteSavedCoin = require("../request/deleteSavedCoin");
 const { getCoinsByName } = require("../request/getCoinsByName");
+const getCoinDetails = require("../request/getCoinDetails");
 
-const router = express.Router();
-
+// Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -17,6 +19,7 @@ const isAuthenticated = (req, res, next) => {
   res.redirect("/login");
 };
 
+// Home route
 router.get("/", (req, res) => {
   if (req.isAuthenticated()) {
     return res.redirect("/coins");
@@ -24,6 +27,7 @@ router.get("/", (req, res) => {
   res.render("index");
 });
 
+// Login
 router.get("/login", (req, res) => {
   res.render("login");
 });
@@ -31,8 +35,8 @@ router.get("/login", (req, res) => {
 router.post(
   "/login",
   [
-    check("username").not().isEmpty().withMessage("Username is required"),
-    check("password").not().isEmpty().withMessage("Password is required"),
+    check("username").notEmpty().withMessage("Username is required"),
+    check("password").notEmpty().withMessage("Password is required"),
   ],
   passport.authenticate("local", {
     successRedirect: "/coins",
@@ -41,16 +45,16 @@ router.post(
   })
 );
 
+// Logout
 router.get("/logout", (req, res, next) => {
   req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    req.flash("sucessful", "You have been logged out.");
+    if (err) return next(err);
+    req.flash("success", "You have been logged out.");
     res.redirect("/");
   });
 });
 
+// Register
 router.get("/register", (req, res) => {
   res.render("register");
 });
@@ -58,13 +62,13 @@ router.get("/register", (req, res) => {
 router.post(
   "/register",
   [
-    check("username").not().isEmpty().withMessage("Username is required"),
+    check("username").notEmpty().withMessage("Username is required"),
     check("password")
       .isLength({ min: 6 })
-      .withMessage("Password has to be at least 6 characters"),
+      .withMessage("Password must be at least 6 characters long"),
     check("confirmPassword")
       .custom((value, { req }) => value === req.body.password)
-      .withMessage("please apply matching passwords"),
+      .withMessage("Passwords must match"),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -72,10 +76,7 @@ router.post(
     if (!errors.isEmpty()) {
       req.flash(
         "error",
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(", ")
+        errors.array().map((err) => err.msg).join(", ")
       );
       return res.redirect("/register");
     }
@@ -84,76 +85,30 @@ router.post(
 
     try {
       await registerAcc(username, password, confirmPassword);
-
-      req.flash("success", "Registration authenticated, Please log in.");
+      req.flash("success", "Registration successful. Please log in.");
       res.redirect("/login");
     } catch (error) {
-      console.error("Error during registration:", error);
+      console.error("Registration error:", error);
       req.flash("error", error.message);
       res.redirect("/register");
     }
   }
 );
 
-router.get("/search", isAuthenticated, (req, res) => {
-  res.render("search", {
-    query: "",
-    results: [],
-  });
-});
-
-router.post(
-  "/search",
-  [
-    check("coin_name")
-      .not()
-      .isEmpty()
-      .withMessage("Please input exact coin name")
-      .trim()
-      .escape(),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      req.flash(
-        "error",
-        errors
-          .array()
-          .map((err) => err.msg)
-          .join(", ")
-      );
-      return res.redirect("/search");
-    }
-
-    const { coin_name } = req.body;
-
-    try {
-      const coins = await getCoinsByName(coin_name);
-
-      res.render("search", {
-        results: coins,
-        query: coin_name,
-      });
-    } catch (error) {
-      console.error("Error searching for coins:", error);
-      req.flash("error", "Server error during search.");
-      res.redirect("/search");
-    }
-  }
-);
-
+// Coins list page
 router.get("/coins", isAuthenticated, async (req, res) => {
   try {
     const coins = await getCoinsList();
     res.render("coins", { coins });
   } catch (error) {
-    req.flash("error", "Error fetching coins data.");
+    console.error("Error fetching coin list:", error);
+    req.flash("error", "Could not fetch coin data.");
     res.render("coins", { coins: [] });
   }
 });
 
-router.post("/coins", async (req, res) => {
+// Save coin
+router.post("/coins", isAuthenticated, async (req, res) => {
   try {
     const data = req.body;
     const userId = req.user.id;
@@ -196,12 +151,13 @@ router.post("/coins", async (req, res) => {
     req.flash("success", "Coin saved successfully!");
     res.redirect("/coins");
   } catch (error) {
-    console.error("Error saving coin data:", error);
+    console.error("Error saving coin:", error);
     req.flash("error", "An error occurred while saving the coin.");
     res.redirect("/coins");
   }
 });
 
+// User's saved coins
 router.get("/user", isAuthenticated, async (req, res) => {
   try {
     const userId = req.user.id;
@@ -222,7 +178,8 @@ router.get("/user", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/user", async (req, res) => {
+// Delete saved coin
+router.post("/user", isAuthenticated, async (req, res) => {
   try {
     const { coinId } = req.body;
     const userId = req.user.id;
@@ -233,7 +190,6 @@ router.post("/user", async (req, res) => {
     }
 
     await deleteSavedCoin(coinId, userId);
-
     req.flash("success", "Coin deleted successfully!");
     res.redirect("/user");
   } catch (error) {
@@ -242,5 +198,68 @@ router.post("/user", async (req, res) => {
     res.redirect("/user");
   }
 });
+
+// Coin details + graph
+router.get("/coin/:id", isAuthenticated, async (req, res) => {
+  try {
+    const { details, chart } = await getCoinDetails(req.params.id);
+    res.render("coin-details", { details, chart });
+  } catch (err) {
+    console.error("Coin detail error:", err);
+    req.flash("error", "Could not load coin details.");
+    res.redirect("/coins");
+  }
+});
+
+// Search page
+router.get("/search", isAuthenticated, (req, res) => {
+  res.render("search", { query: "", results: [] });
+});
+
+router.post(
+  "/search",
+  [
+    check("coin_name")
+      .notEmpty()
+      .withMessage("Please input a coin name")
+      .trim()
+      .escape(),
+  ],
+  isAuthenticated,
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      req.flash(
+        "error",
+        errors.array().map((err) => err.msg).join(", ")
+      );
+      return res.redirect("/search");
+    }
+
+    const { coin_name } = req.body;
+
+    try {
+      const coins = await getCoinsByName(coin_name);
+      res.render("search", { results: coins, query: coin_name });
+    } catch (error) {
+      console.error("Search error:", error);
+      req.flash("error", "Server error during search.");
+      res.redirect("/search");
+    }
+  }
+);
+
+// Consultant Booking Page
+router.get("/consultant", isAuthenticated, (req, res) => {
+  res.render("consultant");
+});
+
+// Live video meeting page
+router.get("/meeting", isAuthenticated, (req, res) => {
+  const roomName = `crypto-consult-${req.user.username}`;
+  res.render("meeting", { roomName });
+});
+
 
 module.exports = router;

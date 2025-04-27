@@ -1,11 +1,30 @@
+<!DOCTYPE html>
 <html lang="en">
   <%- include('./partials/head') %>
   <body>
-    <%- include('./partials/navbar') %> <%- include('./partials/flash') %>
-    <div class="container text-center mt-5">
-      <h1>Welcome to CoinCrest</h1>
-      <a href="/login" class="btn btn-primary me-3">Login</a>
-      <a href="/register" class="btn btn-secondary">Register</a>
+    <%- include('./partials/navbar') %>
+
+    <div class="container text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 90vh;">
+      <h1 class="display-4 fw-bold text-glow">Welcome to Equity Edge Consulting</h1>
+      <p class="lead mt-3 mb-4" style="color: #ccc;">
+      </p>
+
+      <!-- Crypto Logos Row -->
+      <div class="d-flex flex-wrap justify-content-center gap-4 mb-5 crypto-row">
+        <img src="https://assets.coingecko.com/coins/images/1/small/bitcoin.png" alt="Bitcoin" />
+        <img src="https://assets.coingecko.com/coins/images/279/small/ethereum.png" alt="Ethereum" />
+        <img src="https://assets.coingecko.com/coins/images/975/small/cardano.png" alt="Cardano" />
+        <img src="https://assets.coingecko.com/coins/images/4128/small/solana.png" alt="Solana" />
+        <img src="https://assets.coingecko.com/coins/images/44/small/xrp-symbol-white-128.png" alt="XRP" />
+      </div>
+
+      <!-- CTA Button -->
+      <a href="/register" class="btn btn-glow btn-lg">🚀 Get Started</a>
+
+      <!-- Scroll Down Arrow -->
+      <div class="scroll-down mt-5">
+        <span>&#8675;</span>
+      </div>
     </div>
   </body>
 </html>

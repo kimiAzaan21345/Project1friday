@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head') %>
+  <body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container mt-5">
+      <h2 class="text-center text-light mb-4">Live Crypto Consultation</h2>
+      <div id="jitsi" style="height: 80vh; border-radius: 12px; overflow: hidden;"></div>
+    </div>
+
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+      const domain = "meet.jit.si";
+      const options = {
+        roomName: "<%= roomName %>",
+        parentNode: document.getElementById("jitsi"),
+        userInfo: {
+          displayName: "<%= user.username %>"
+        },
+        configOverwrite: {
+          startWithAudioMuted: false,
+          startWithVideoMuted: false,
+        }
+      };
+      const api = new JitsiMeetExternalAPI(domain, options);
+    </script>
+  </body>
+</html>
