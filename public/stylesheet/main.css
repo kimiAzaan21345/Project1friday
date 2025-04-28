@@ -101,7 +101,6 @@ input:focus, textarea:focus {
     0 0 20px var(--primary),
     0 0 30px var(--accent);
 }
-/* Glowing Text */
 .text-glow {
   color: #ffffff;
   text-shadow:
@@ -109,20 +108,15 @@ input:focus, textarea:focus {
     0 0 20px var(--primary),
     0 0 30px var(--accent);
 }
-
-/* Hover Glow on Crypto Icons */
 .crypto-row img {
   width: 60px;
   transition: 0.3s ease;
   border-radius: 12px;
 }
-
 .crypto-row img:hover {
   transform: scale(1.1);
   filter: drop-shadow(0 0 10px var(--primary));
 }
-
-/* CTA Button Style */
 .btn-glow {
   background: linear-gradient(to right, #00ffd5, #ff00c8);
   color: #000;
@@ -136,21 +130,15 @@ input:focus, textarea:focus {
   transform: scale(1.1);
   box-shadow: 0 0 20px var(--accent);
 }
-
-/* Scroll Down Arrow */
 .scroll-down span {
   font-size: 2rem;
   color: var(--primary);
   animation: bounce 1.5s infinite;
 }
-
-/* Bounce animation for arrow */
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(10px); }
 }
-
-/* Optional: Animated background pulse */
 body::before {
   content: "";
   position: fixed;
