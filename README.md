@@ -1,10 +1,33 @@
-Virtual machine db login:
-db name:coin123      password:Password123
+# uniview
 
-local host db login:
-db name:root         password:Password123
+1. Use provided .env file or create your own:
 
-.env file is already in. (the .env file contains all the local database credentials)
+```
+DB_USER=root
+DB_PASSWORD=Password123
+DB_NAME=coin
+DB_HOST=localhost
+DB_PORT=3306
 
-website login credentials:
-username:hassan   password:12345678
+SERVER_PORT=8000
+SECRET_KEY=secretkey1234567
+BASE_URL=
+API_KEY=CG-J4vg6cUL3DjqsuUcDUC1sD5T
+```
+
+2. Install dependencies:
+
+```
+npm install
+```
+
+3. Start the server:
+
+```
+npm run dev
+```
+
+4. Open the app in your browser:
+
+```
+http://localhost:8000
