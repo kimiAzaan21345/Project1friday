@@ -1,4 +1,3 @@
-# uniview
 
 1. Use provided .env file or create your own:
 
